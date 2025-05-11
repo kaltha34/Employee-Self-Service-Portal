@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave History - Employee Self-Service Portal</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div th:replace="layout/base :: header"></div>
+    
+    <main class="container">
+        <h1>Leave History</h1>
+        
+        <div class="card">
+            <div class="card-header">My Leave Requests</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Duration</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Submitted On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="request : ${leaveRequests}">
+                            <td th:text="${request.leaveType}">Annual</td>
+                            <td th:text="${#temporals.format(request.startDate, 'dd-MM-yyyy')}">01-06-2025</td>
+                            <td th:text="${#temporals.format(request.endDate, 'dd-MM-yyyy')}">05-06-2025</td>
+                            <td th:text="${#temporals.daysBetween(request.startDate, request.endDate) + 1} + ' days'">5 days</td>
+                            <td th:text="${request.reason}">Family vacation</td>
+                            <td>
+                                <span th:if="${request.status.name() == 'PENDING'}" class="badge badge-pending">Pending</span>
+                                <span th:if="${request.status.name() == 'APPROVED'}" class="badge badge-approved">Approved</span>
+                                <span th:if="${request.status.name() == 'REJECTED'}" class="badge badge-rejected">Rejected</span>
+                            </td>
+                            <td th:text="${#temporals.format(request.submittedOn, 'dd-MM-yyyy')}">01-05-2025</td>
+                            <td>
+                                <a th:href="@{/leave/view/{id}(id=${request.requestId})}" class="btn btn-secondary" style="padding: 5px 10px;">View</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(leaveRequests)}">
+                            <td colspan="8" style="text-align: center;">No leave requests found</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 20px;">
+                    <a th:href="@{/leave/apply}" class="btn">Apply for Leave</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div th:replace="layout/base :: footer"></div>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>
