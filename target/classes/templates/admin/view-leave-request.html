@@ -5,6 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Leave Request - Employee Self-Service Portal</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        .badge-pending {
+            color: #212529;
+            background-color: #ffc107;
+        }
+        .badge-approved {
+            color: #fff;
+            background-color: #28a745;
+        }
+        .badge-rejected {
+            color: #fff;
+            background-color: #dc3545;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
 </head>
 <body>
     <div th:replace="layout/base :: header"></div>
@@ -36,14 +72,6 @@
                                 <th>Name:</th>
                                 <td th:text="${leaveRequest.employeeName}">John Doe</td>
                             </tr>
-                            <tr>
-                                <th>Department:</th>
-                                <td th:text="${(leaveRequest.employeeDepartment != null && !leaveRequest.employeeDepartment.isEmpty()) ? leaveRequest.employeeDepartment : (employeeDepartment != null ? employeeDepartment : 'Not Specified')}">IT</td>
-                            </tr>
-                            <tr>
-                                <th>Email:</th>
-                                <td th:text="${employeeEmail}">john.doe@essp.com</td>
-                            </tr>
                         </table>
                     </div>
                     
@@ -64,21 +92,10 @@
                                 <td th:text="${#temporals.format(leaveRequest.endDate, 'dd-MM-yyyy')}">05-06-2025</td>
                             </tr>
                             <tr>
-                                <th>Duration:</th>
-                                <td th:text="${#temporals.daysBetween(leaveRequest.startDate, leaveRequest.endDate) + 1} + ' days'">5 days</td>
-                            </tr>
-                            <tr>
                                 <th>Status:</th>
                                 <td>
-                                    <span th:if="${leaveRequest.status != null && leaveRequest.status.name() == 'PENDING'}" class="badge badge-pending">Pending</span>
-                                    <span th:if="${leaveRequest.status != null && leaveRequest.status.name() == 'APPROVED'}" class="badge badge-approved">Approved</span>
-                                    <span th:if="${leaveRequest.status != null && leaveRequest.status.name() == 'REJECTED'}" class="badge badge-rejected">Rejected</span>
-                                    <span th:if="${leaveRequest.status == null}" class="badge badge-pending">Pending</span>
+                                    <span class="badge badge-pending">Pending</span>
                                 </td>
-                            </tr>
-                            <tr>
-                                <th>Submitted On:</th>
-                                <td th:text="${#temporals.format(leaveRequest.submittedOn, 'dd-MM-yyyy')}">01-05-2025</td>
                             </tr>
                         </table>
                     </div>
@@ -89,12 +106,7 @@
                     <p th:text="${leaveRequest.reason}">Family vacation</p>
                 </div>
                 
-                <div th:if="${leaveRequest.documentPath}" style="margin-top: 20px;">
-                    <h3>Supporting Document</h3>
-                    <a th:href="@{/leave/document/{id}(id=${leaveRequest.requestId})}" target="_blank" class="btn btn-secondary">View Document</a>
-                </div>
-                
-                <div th:if="${leaveRequest.status.name() == 'PENDING'}" style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px;">
+                <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px;">
                     <h3>Action</h3>
                     <form th:action="@{/admin/leave-requests/approve/{id}(id=${leaveRequest.requestId})}" method="post" style="margin-bottom: 20px;">
                         <div class="form-group">
@@ -111,20 +123,6 @@
                         </div>
                         <button type="submit" class="btn btn-danger">Reject</button>
                     </form>
-                </div>
-                
-                <div th:if="${leaveRequest.status.name() != 'PENDING'}" style="margin-top: 20px;">
-                    <h3>Decision Details</h3>
-                    <table class="table">
-                        <tr>
-                            <th>Decision By:</th>
-                            <td th:text="${leaveRequest.approverName}">Admin User</td>
-                        </tr>
-                        <tr>
-                            <th>Comments:</th>
-                            <td th:text="${leaveRequest.comments ?: 'No comments provided'}">Approved as requested</td>
-                        </tr>
-                    </table>
                 </div>
             </div>
         </div>

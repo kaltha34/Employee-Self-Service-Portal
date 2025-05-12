@@ -4,6 +4,7 @@ com\essp\config\DataInitializer.class
 com\essp\security\UserDetailsServiceImpl.class
 com\essp\security\JwtAuthenticationFilter.class
 com\essp\config\WebSecurityConfig.class
+com\essp\controller\AdminLeaveController.class
 com\essp\model\Employee.class
 com\essp\model\LeaveBalance.class
 com\essp\security\JwtUtils.class

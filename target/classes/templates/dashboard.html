@@ -73,7 +73,7 @@
                 <a th:href="@{/leave/apply}" class="btn">Apply for Leave</a>
                 <a th:href="@{/profile}" class="btn btn-secondary">Update Profile</a>
                 <a th:href="@{/leave/balance}" class="btn btn-secondary">Check Leave Balance</a>
-                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/leave-requests}" class="btn btn-secondary">Admin Panel</a>
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin-simple/requests}" class="btn btn-secondary">Admin Panel</a>
             </div>
         </div>
         
@@ -101,12 +101,12 @@
                             <td th:text="${#temporals.format(request.endDate, 'dd-MM-yyyy')}">05-06-2025</td>
                             <td th:text="${request.reason}">Family vacation</td>
                             <td>
-                                <a th:href="@{/admin/leave-requests/view/{id}(id=${request.requestId})}" class="btn btn-secondary" style="padding: 5px 10px;">View</a>
+                                <button th:onclick="'openModal(' + ${request.requestId} + ')'" class="btn btn-secondary" style="padding: 5px 10px;">Actions</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <a th:href="@{/admin/leave-requests}" class="btn" style="margin-top: 10px;">View All Requests</a>
+                <a th:href="@{/admin-simple/requests}" class="btn" style="margin-top: 10px;">View All Requests</a>
             </div>
         </div>
     </main>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Leave Requests - Employee Self-Service Portal</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        .badge-pending {
+            color: #212529;
+            background-color: #ffc107;
+        }
+        .badge-approved {
+            color: #fff;
+            background-color: #28a745;
+        }
+        .badge-rejected {
+            color: #fff;
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="layout/base :: header"></div>
+    
+    <main class="container">
+        <h1>Leave Requests Management</h1>
+        
+        <!-- Success message display -->
+        <div th:if="${successMessage}" class="alert alert-success" role="alert">
+            <span th:text="${successMessage}">Success message</span>
+        </div>
+        
+        <!-- Error message display -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}">Error message</span>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span th:text="${currentFilter == 'all' ? 'All Leave Requests' : 'Pending Leave Requests'}">Pending Leave Requests</span>
+                    <div>
+                        <a th:if="${currentFilter != 'all'}" th:href="@{/admin/leaves?status=all}" class="btn btn-secondary" style="padding: 5px 10px;">View All</a>
+                        <a th:if="${currentFilter == 'all'}" th:href="@{/admin/leaves}" class="btn btn-secondary" style="padding: 5px 10px;">View Pending</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="request : ${leaveRequests}">
+                            <td th:text="${request.employeeName}">John Doe</td>
+                            <td th:text="${request.employeeDepartment != null ? request.employeeDepartment : 'Not Specified'}">IT</td>
+                            <td th:text="${request.leaveType}">Annual</td>
+                            <td th:text="${#temporals.format(request.startDate, 'dd-MM-yyyy')}">01-06-2025</td>
+                            <td th:text="${#temporals.format(request.endDate, 'dd-MM-yyyy')}">05-06-2025</td>
+                            <td th:text="${#temporals.daysBetween(request.startDate, request.endDate) + 1} + ' days'">5 days</td>
+                            <td>
+                                <span th:if="${request.status != null && request.status.name() == 'PENDING'}" class="badge badge-pending">Pending</span>
+                                <span th:if="${request.status != null && request.status.name() == 'APPROVED'}" class="badge badge-approved">Approved</span>
+                                <span th:if="${request.status != null && request.status.name() == 'REJECTED'}" class="badge badge-rejected">Rejected</span>
+                                <span th:if="${request.status == null}" class="badge badge-pending">Pending</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/leaves/{id}(id=${request.requestId})}" class="btn btn-secondary" style="padding: 5px 10px;">View</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(leaveRequests)}">
+                            <td colspan="8" style="text-align: center;">No leave requests found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <div th:replace="layout/base :: footer"></div>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

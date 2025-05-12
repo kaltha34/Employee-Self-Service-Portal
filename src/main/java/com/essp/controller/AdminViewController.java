@@ -72,20 +72,11 @@ public class AdminViewController {
         try {
             // Get the leave request by ID
             LeaveRequestDTO leaveRequest = leaveRequestService.getLeaveRequestById(id);
+            
+            // Add the leave request to the model
             model.addAttribute("leaveRequest", leaveRequest);
             
-            // Get employee details
-            EmployeeDTO employee = employeeService.getEmployeeById(leaveRequest.getEmployeeId());
-            
-            // Make sure we have all the employee information needed for the view
-            model.addAttribute("employeeDepartment", employee.getDepartment() != null ? employee.getDepartment() : "Not Specified");
-            model.addAttribute("employeeEmail", employee.getEmail());
-            
-            // Log successful retrieval
-            System.out.println("Successfully retrieved leave request with ID: " + id);
-            System.out.println("Employee: " + employee.getFirstName() + " " + employee.getLastName());
-            System.out.println("Department: " + employee.getDepartment());
-            
+            // Return the view template
             return "admin/view-leave-request";
         } catch (Exception e) {
             // Log the error for debugging
