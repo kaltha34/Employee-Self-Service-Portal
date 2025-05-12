@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Employee Self-Service Portal</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        .badge-pending {
+            color: #212529;
+            background-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="layout/base :: header"></div>
+    
+    <main class="container">
+        <h1>Admin Dashboard</h1>
+        
+        <!-- Error message display -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}">Error message</span>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Pending Leave Requests</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="request : ${pendingRequests}">
+                            <td th:text="${request.employeeName}">John Doe</td>
+                            <td th:text="${request.leaveType}">Annual</td>
+                            <td th:text="${#temporals.format(request.startDate, 'dd-MM-yyyy')}">01-06-2025</td>
+                            <td th:text="${#temporals.format(request.endDate, 'dd-MM-yyyy')}">05-06-2025</td>
+                            <td>
+                                <span class="badge badge-pending">Pending</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(pendingRequests)}">
+                            <td colspan="5" style="text-align: center;">No pending leave requests found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <div th:replace="layout/base :: footer"></div>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

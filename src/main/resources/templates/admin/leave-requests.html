@@ -12,6 +12,11 @@
     <main class="container">
         <h1>Leave Requests Management</h1>
         
+        <!-- Error message display -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}">Error message</span>
+        </div>
+        
         <div class="card">
             <div class="card-header">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -39,16 +44,17 @@
                     <tbody>
                         <tr th:each="request : ${leaveRequests}">
                             <td th:text="${request.employeeName}">John Doe</td>
-                            <td th:text="${request.employeeDepartment}">IT</td>
+                            <td th:text="${request.employeeDepartment != null ? request.employeeDepartment : 'Not Specified'}">IT</td>
                             <td th:text="${request.leaveType}">Annual</td>
                             <td th:text="${#temporals.format(request.startDate, 'dd-MM-yyyy')}">01-06-2025</td>
                             <td th:text="${#temporals.format(request.endDate, 'dd-MM-yyyy')}">05-06-2025</td>
                             <td th:text="${#temporals.daysBetween(request.startDate, request.endDate) + 1} + ' days'">5 days</td>
                             <td th:text="${request.reason}">Family vacation</td>
                             <td>
-                                <span th:if="${request.status.name() == 'PENDING'}" class="badge badge-pending">Pending</span>
-                                <span th:if="${request.status.name() == 'APPROVED'}" class="badge badge-approved">Approved</span>
-                                <span th:if="${request.status.name() == 'REJECTED'}" class="badge badge-rejected">Rejected</span>
+                                <span th:if="${request.status != null && request.status.name() == 'PENDING'}" class="badge badge-pending">Pending</span>
+                                <span th:if="${request.status != null && request.status.name() == 'APPROVED'}" class="badge badge-approved">Approved</span>
+                                <span th:if="${request.status != null && request.status.name() == 'REJECTED'}" class="badge badge-rejected">Rejected</span>
+                                <span th:if="${request.status == null}" class="badge badge-pending">Pending</span>
                             </td>
                             <td>
                                 <a th:href="@{/admin/leave-requests/view/{id}(id=${request.requestId})}" class="btn btn-secondary" style="padding: 5px 10px;">View</a>

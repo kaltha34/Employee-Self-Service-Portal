@@ -12,6 +12,11 @@
     <main class="container">
         <h1>Leave Request Details</h1>
         
+        <!-- Error message display -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}">Error message</span>
+        </div>
+        
         <div class="card">
             <div class="card-header">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -33,7 +38,7 @@
                             </tr>
                             <tr>
                                 <th>Department:</th>
-                                <td th:text="${employeeDepartment}">IT</td>
+                                <td th:text="${(leaveRequest.employeeDepartment != null && !leaveRequest.employeeDepartment.isEmpty()) ? leaveRequest.employeeDepartment : (employeeDepartment != null ? employeeDepartment : 'Not Specified')}">IT</td>
                             </tr>
                             <tr>
                                 <th>Email:</th>
@@ -65,9 +70,10 @@
                             <tr>
                                 <th>Status:</th>
                                 <td>
-                                    <span th:if="${leaveRequest.status.name() == 'PENDING'}" class="badge badge-pending">Pending</span>
-                                    <span th:if="${leaveRequest.status.name() == 'APPROVED'}" class="badge badge-approved">Approved</span>
-                                    <span th:if="${leaveRequest.status.name() == 'REJECTED'}" class="badge badge-rejected">Rejected</span>
+                                    <span th:if="${leaveRequest.status != null && leaveRequest.status.name() == 'PENDING'}" class="badge badge-pending">Pending</span>
+                                    <span th:if="${leaveRequest.status != null && leaveRequest.status.name() == 'APPROVED'}" class="badge badge-approved">Approved</span>
+                                    <span th:if="${leaveRequest.status != null && leaveRequest.status.name() == 'REJECTED'}" class="badge badge-rejected">Rejected</span>
+                                    <span th:if="${leaveRequest.status == null}" class="badge badge-pending">Pending</span>
                                 </td>
                             </tr>
                             <tr>

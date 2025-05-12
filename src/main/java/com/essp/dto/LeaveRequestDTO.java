@@ -21,6 +21,8 @@ public class LeaveRequestDTO {
     
     private String employeeName;
     
+    private String employeeDepartment;
+    
     @NotBlank(message = "Leave type is required")
     private String leaveType;
     
@@ -51,6 +53,7 @@ public class LeaveRequestDTO {
         this.requestId = leaveRequest.getRequestId();
         this.employeeId = leaveRequest.getEmployee().getEmpId();
         this.employeeName = leaveRequest.getEmployee().getFirstName() + " " + leaveRequest.getEmployee().getLastName();
+        this.employeeDepartment = leaveRequest.getEmployee().getDepartment();
         this.leaveType = leaveRequest.getLeaveType();
         this.startDate = leaveRequest.getStartDate();
         this.endDate = leaveRequest.getEndDate();
